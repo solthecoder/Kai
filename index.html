@@ -10,8 +10,38 @@
         <script type="text/javascript">
             let canvas = document.getElementById("myCanvas");
             let ctx = canvas.getContext("2d");
-            document.body.style.zoom = "288%";
+            let windowWidth = window.innerWidth / 256;
+            let windowHeight = window.innerHeight / 240;
+
+            if(windowWidth>windowHeight) {
+                document.body.style.zoom = windowHeight;
+            }
+            else {
+                document.body.style.zoom = windowWidth;
+            }
+
+            function updateZoom() {
+                windowWidth = window.innerWidth / 256;
+                windowHeight = window.innerHeight / 240;                
+                if(windowWidth>windowHeight) {
+                document.body.style.zoom = windowHeight;
+            }
+            else {
+                document.body.style.zoom = windowWidth;
+            }                
+            }
+
+            window.onresize = updateZoom;
+
             let fps = 60;
+            let spriteWidth = 16;
+            let spriteHeight = 16;
+
+            let spriteGap = 1;
+            let sheetUnitWidth = 16;
+            let sheetUnitHeight = 16;
+            let totalSheetWidth = sheetUnitWidth + spriteGap * 2;
+            let totalSheetHeight = sheetUnitHeight + spriteGap * 2;
             let worldTiles = new Image();
             worldTiles.src = "tiles-overworld.png";
 
@@ -36,9 +66,9 @@
             function drawMap(level) {
                 for(let i = 0; i < level.length; i++) {
                     for(let j = 0; j < level[i].length; j++) {
-                        ctx.drawImage(worldTiles, ((level[i][j]%18) * 17) + 1,
-                    (Math.floor(level[i][j]/18) * 17) + 1,
-                    16, 16, j *16, i *16, 16, 16);
+                        ctx.drawImage(worldTiles, ((level[i][j]%totalSheetWidth) * (sheetUnitWidth+spriteGap)) + spriteGap,
+                    (Math.floor(level[i][j]/totalSheetHeight) * (sheetUnitHeight+spriteGap)) + spriteGap,
+                    sheetUnitWidth, sheetUnitHeight, j * spriteWidth, i * spriteHeight, spriteWidth, spriteHeight);
                     }
 
                 }
